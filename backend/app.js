@@ -36,8 +36,10 @@ app.get("/health", (req,res) => {
 
 // Backend Routes
 import userRoutes from './routes/user.routes.js'
+import pollRoutes from './routes/poll.routes.js'
 
 app.use('/api/v1/user', userRoutes)
+app.use('/api/v1/poll', pollRoutes)
 
 
 
