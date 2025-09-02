@@ -61,6 +61,59 @@ const handleRegisterUser = asyncHandler( async (req, res) => {
 })
 
 
+const handleLoginUser = asyncHandler( async (req, res) => {
+    // get data
+    const {email, password} = req.body;
+
+    // check for the value
+    if(
+        [email, password].some((field) => field.trim() === "" )
+    ){
+        throw new ApiError(409, "Email and password is required")
+    }
+
+    // Find the user
+    const user = await User.findOne({email})
+
+    if(!user)
+        throw new ApiError(404, "User doesn't exists with this email")
+
+    // Now check if the password is correct or not
+
+    const isPasswordValid = await user.isPasswordCorrect(password)
+
+    if(!isPasswordValid)
+        throw new ApiError(401, "Invalid User Credentials")
+
+
+    // Modify the access token and refresh token
+
+    const {accessToken, refreshToken} = generateAccessAndRefreshToken(user._id)
+
+    const loggedInUser = await User.findById(user._id).select("-password -refreshToken")
+
+    const cookieOptions = {
+        httpOnly: true,
+        secure: true
+    }
+
+    // Return the response and the cookies
+    return res
+    .status(200)
+    .cookie("accessToken", accessToken, cookieOptions)
+    .cookie("refreshToken", refreshToken, cookieOptions)
+    .send(
+        new ApiResponse(
+            200,
+            {
+                user : loggedInUser, accessToken, refreshToken
+            },
+            "User logged In successfully"
+        )
+    )
+})
+
+
 
 const handleUsers = asyncHandler( async (req, res) => {
     try {
@@ -74,5 +127,6 @@ const handleUsers = asyncHandler( async (req, res) => {
 
 export {
     handleUsers,
-    handleRegisterUser
+    handleRegisterUser,
+    handleLoginUser,
 }

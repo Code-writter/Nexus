@@ -1,14 +1,13 @@
 import { Router } from "express";
 import {
-    handleUsers,
-    handleRegisterUser
+    handleRegisterUser,
+    handleLoginUser
 } from '../controllers/user.controller.js'
 
 const router = Router()
 
-router.route('/')
-    .get(handleUsers)
-    .post(handleRegisterUser)
+router.route('/register').post(handleRegisterUser)
+router.route('/login').post(handleLoginUser)
     
 
 
