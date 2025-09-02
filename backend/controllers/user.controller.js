@@ -85,7 +85,7 @@ const handleLoginUser = asyncHandler( async (req, res) => {
 
     // Modify the access token and refresh token
 
-    const {accessToken, refreshToken} = generateAccessAndRefreshToken(user._id)
+    const {accessToken, refreshToken} = await generateAccessAndRefreshToken(user._id)
 
     const loggedInUser = await User.findById(user._id).select("-password -refreshToken")
 
@@ -111,19 +111,41 @@ const handleLoginUser = asyncHandler( async (req, res) => {
 })
 
 
+const handleUserInformation = asyncHandler( async (req, res) => {
+    const id = req.user._id;
 
-const handleUsers = asyncHandler( async (req, res) => {
-    try {
-        
-    } catch (error) {
-        
+    if(!id){
+        throw new ApiError(404, "UnAuthorized")
     }
+
+    // Find in the data base
+    const getUser = await User.findById({ _id : id })
+
+    if(!getUser)
+        throw new ApiError(404, "User not found ")
+
+    const details = await User.findById(getUser._id).select("-password -refreshToken")
+
+    if(!details)
+        throw new ApiError(500, "Something went wrong while feating the details")
+    
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(
+            200,
+            {
+                user : details
+            },
+            "User details"
+        )
+    )
 })
 
 
 
 export {
-    handleUsers,
+    handleUserInformation,
     handleRegisterUser,
     handleLoginUser,
 }

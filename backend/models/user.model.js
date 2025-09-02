@@ -17,10 +17,10 @@ const userSchema = new Schema(
             trim: true,
             index: true,
         },
-        events :[
+        bookMarkedPolls :[
             {
                 type: Schema.Types.ObjectId,
-                ref: "Event" 
+                ref: "Poll" 
             }
         ],
         password:{
