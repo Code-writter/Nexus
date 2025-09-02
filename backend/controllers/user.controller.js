@@ -19,8 +19,6 @@ const generateAccessAndRefreshToken = async (userId) => {
     }
 }
 
-
-
 const handleRegisterUser = asyncHandler( async (req, res) => {
     // get uses details from frontend
     const {fullName, email, password} = req.body;
@@ -59,7 +57,6 @@ const handleRegisterUser = asyncHandler( async (req, res) => {
         new ApiResponse(200, createdUser, "User created sucessfully")
     )
 })
-
 
 const handleLoginUser = asyncHandler( async (req, res) => {
     // get data
