@@ -24,6 +24,16 @@ app.use(express.static("public"))
 // for the cookies
 app.use(cookieParser())
 
+// Health check 
+
+app.get("/health", (req,res) => {
+    res.status(200).json({
+        message : "Server health is good : )"
+    })
+})
+
+
+
 // Backend Routes
 import userRoutes from './routes/user.routes.js'
 
