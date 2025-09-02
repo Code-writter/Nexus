@@ -66,7 +66,7 @@ const handleCreatePoll = asyncHandler( async (req, res) => {
     )
 })
 
-
+// Get All polls
 const handleGetAllPolls = asyncHandler( async (req, res) => {
     const {type, creatorId, page = 1, limit = 10} = req.query;
 
@@ -107,6 +107,7 @@ const handleGetAllPolls = asyncHandler( async (req, res) => {
         }
     })
 
+    console.log("Updated Polls", updatedPolls)
     // Get total count of polls for the pagination
     const totalPolls = await Poll.countDocuments(filter)
 
@@ -125,6 +126,7 @@ const handleGetAllPolls = asyncHandler( async (req, res) => {
             }
         }
     ])
+    // Note: #Removelog
     console.log(stats)
     // Note make sure all types are included in the page
     const allTypesOfPolls = [
@@ -183,7 +185,52 @@ const handleGetPollById = asyncHandler(async (req, res) => {
 })
 
 const handleVoteOnPoll = asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    const { optionIndex, responseText } = req.body;
+    const voterId = req.user._id
 
+    const polls = await Poll.findById(id)
+
+    if(!polls) 
+        throw new ApiResponse(404, "Poll not found")
+
+    if(polls.closed)
+        throw new ApiResponse(400, "poll is closed")
+
+    if(polls.voters.includes(voterId))
+        throw new ApiResponse(400, "User has already voted on this poll")
+
+
+    if(polls.typeOfPoll === "open-ended"){
+        if(!responseText)
+            throw new ApiError(400, "Response text is required for the open ended polls")
+
+        polls.responses.push({voterId, responseText})
+    }else {
+        if(
+            optionIndex === undefined ||
+            optionIndex < 0 ||
+            optionIndex >= polls.options.length
+        ){
+            throw new ApiError(400, "Invalid option index")
+        }
+
+        polls.options[optionIndex].votes += 1;
+    }
+
+    polls.voters.push(voterId)
+    await polls.save()
+
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(
+            200,
+            {
+                poll : polls
+            },
+        )
+    )
 })
 
 const handleClosePolls = asyncHandler(async (req, res) => {
