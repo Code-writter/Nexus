@@ -24,6 +24,16 @@ const handleCreatePoll = asyncHandler( async (req, res) => {
 
             processedOptions = options.map((option) => ({optionText : option}));
             break;
+        case "rating" : 
+            processedOptions = [1, 2, 3, 4, 5].map((option) => ({
+                optionText : option.toString()
+            }))
+            break;
+        case "opinion" :
+            processedOptions = ["Yes", "No"].map((option) => ({
+                optionText : option
+            }))
+            break;
         case "open-ended" :// In case of open ended
             processedOptions = [] 
             break;
@@ -56,6 +66,42 @@ const handleCreatePoll = asyncHandler( async (req, res) => {
 })
 
 
+const handleGetAllPolls = asyncHandler( async (req, res) => {
+
+})
+
+
+const handlegetVotedPolls = asyncHandler(async (req, res) => {
+
+})
+
+const handleGetPollById = asyncHandler(async (req, res) => {
+
+})
+
+const handleVoteOnPoll = asyncHandler(async (req, res) => {
+
+})
+
+const handleClosePolls = asyncHandler(async (req, res) => {
+
+})
+
+const handleBookmarkedPolls = asyncHandler(async (req, res) => {
+
+})
+
+const handleDeletePolls = asyncHandler(async(req, res) => {
+
+})
+
 export {
-    handleCreatePoll
+    handleCreatePoll,
+    handleGetAllPolls,
+    handlegetVotedPolls,
+    handleGetPollById,
+    handleVoteOnPoll,
+    handleClosePolls,
+    handleBookmarkedPolls,
+    handleDeletePolls
 }
