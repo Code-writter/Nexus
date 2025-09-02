@@ -18,10 +18,10 @@ const router = Router()
 router.route("/create")
 .post( verifyJWT ,handleCreatePoll)
 
-router.route("getAllPolls")
+router.route("/getAllPolls")
 .get(verifyJWT, handleGetAllPolls);
 
-router.route("votedPolls")
+router.route("/votedPolls")
 .get(verifyJWT, handlegetVotedPolls);
 
 router.route("/:id")
