@@ -5,6 +5,7 @@ config()
 
 export default async function connectDB(){
     try {
+        
         const databaseUrl = process.env.MONGODB_URI
         const appName = process.env.APP_NAME
         const connectionInstance = await mongoose.connect(`${databaseUrl}${appName}`)
