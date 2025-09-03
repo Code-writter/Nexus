@@ -143,9 +143,78 @@ const handleUserInformation = asyncHandler( async (req, res) => {
 })
 
 
+const getCurrentUser = asyncHandler(async(req, res, next) => {
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(
+            200,
+            req.user,
+            'current user fetched successfully'
+        )
+    )
+})
+
+
+const refreshAccessToken = asyncHandler(async (req, res) => {
+    const incomingRefreshToken = req.cookies.refreshToken || req.body.refreshToken
+
+    if(!incomingRefreshToken){
+        throw new ApiError(401, 'Unauthorized request')
+    }
+
+    try {
+        const decodedToken = Jwt.verify(
+            incomingRefreshToken, 
+            process.env.REFRESH_TOKEN_SECRET,
+        )
+    
+        const user = await User.findById(decodedToken?._id)
+    
+        if(!user){
+            throw new ApiError(401, 'Invalid refresh token')
+        }
+    
+        if(incomingRefreshToken !== user?.refreshToken){
+            throw new ApiError(401, 'Refresh token is expired or used')
+        }
+    
+        const options = {
+            httpOnly: true,
+            secure: true
+        }
+    
+        const {accessToken, NewrefreshToken} = await generateAccessAndRefreshToken(user._id)
+    
+        return res
+        .status(200)
+        .cookie('accessToken', accessToken, options)
+        .cookie('refreshToken', NewrefreshToken, options)
+        .json(
+            new ApiResponse(
+                200,
+                {accessToken, refreshToken: NewrefreshToken},
+                'Access Token refreshed '
+            )
+        )
+    } catch (error) {
+        throw new ApiError(401, error?.message || 'Invalid refresh token')
+    }
+})
+
+const isAuthenticated = asyncHandler(async(req, res) => {
+    try {
+        return res.status(200).json({success : true})
+    } catch (error) {
+        throw new ApiError(401, error?.message || 'Invalid refresh token')
+    }
+})  
 
 export {
     handleUserInformation,
     handleRegisterUser,
     handleLoginUser,
+    getCurrentUser,
+    refreshAccessToken,
+    isAuthenticated
 }
