@@ -1,5 +1,4 @@
 import { 
-    BrowserRouter as Router,
     Routes, 
     Route,
     Navigate
@@ -15,18 +14,17 @@ import BookmarkedPolls from "./pages/Dashboard/Bookmarked";
 export default function App(){
     return (
         <div>
-            <Router>
-                <Routes>
-                    <Route path={"/"} element={<Root />}  />
-                    <Route path={"/login"} element={<Login />}  />
-                    <Route path={"/sign-up"} element={<SignUp />}  />
-                    <Route path={"/dashboard"} element={<Home />}  />
-                    <Route path={"/create-poll"} element={<CreatedPolls />}  />
-                    <Route path={"/my-polls"} element={<MyPolls />}  />
-                    <Route path={"/voted-polls"} element={<VotedPolls />}  />
-                    <Route path={"/bookmarked-polls"} element={<BookmarkedPolls />}  />
-                </Routes>
-            </Router>
+            <Routes>
+                <Route path={"/"} element={<Root />}  />
+                <Route path={"/login"} element={<Login />}  />
+                
+                <Route path={"/sign-up"} element={<SignUp />}  />
+                <Route path={"/dashboard"} element={<Home />}  />
+                <Route path={"/create-poll"} element={<CreatedPolls />}  />
+                <Route path={"/my-polls"} element={<MyPolls />}  />
+                <Route path={"/voted-polls"} element={<VotedPolls />}  />
+                <Route path={"/bookmarked-polls"} element={<BookmarkedPolls />}  />
+            </Routes>
         </div>
     )
 }   
