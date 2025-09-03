@@ -177,6 +177,27 @@ const handleGetAllPolls = asyncHandler( async (req, res) => {
 
 
 const handlegetVotedPolls = asyncHandler(async (req, res) => {
+    const id = req.user._id
+
+    if(!id)
+        throw new ApiError(404, "Unauthorized access")
+
+    const votedPolls = await Poll.find({ voters: { $in: [id] } })
+
+    if(!votedPolls)
+        throw new ApiError(404, "There is no voted polls for the given user")
+
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(
+            200,
+            {
+                votedPolls : votedPolls
+            },
+            "Voted polls for the user"
+        )
+    )
 
 })
 
@@ -234,15 +255,59 @@ const handleVoteOnPoll = asyncHandler(async (req, res) => {
 })
 
 const handleClosePolls = asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    const creatorId = req.user._id;
 
+    const polls = await Poll.findOne({$and : [{_id : id}, {creator : creatorId}]})
+
+    if(!polls) 
+        throw new ApiError(404, "Poll not found")
+
+    if(polls.closed)
+        throw new ApiResponse(400, "poll is closed")
+
+    polls.closed = true;
+    await polls.save()
+
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(
+            200,
+            {
+                poll : polls
+            },
+        )
+    )
 })
 
 const handleBookmarkedPolls = asyncHandler(async (req, res) => {
-
+    
 })
 
 const handleDeletePolls = asyncHandler(async(req, res) => {
+    const { id } = req.params;
+    const creatorId = req.user._id
 
+
+    const poll = await Poll.findOne({ $and : [{_id : id}, {creator : creatorId}] })
+
+    if(!poll)
+        throw new ApiError(404, "Poll not found")
+
+    await poll.deleteOne()
+
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(
+            200,
+            {
+                poll : {}
+            },
+            "Poll deleted successfully"
+        )
+    )
 })
 
 export {
