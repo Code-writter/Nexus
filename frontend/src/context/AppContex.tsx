@@ -1,8 +1,17 @@
-import { createContext, useState } from "react";
+import axios from "axios";
+import { createContext, useEffect, useState } from "react";
 import React from "react";
+import { userApi } from "../api/axios";
 
-// @ts-ignore
-export const AppContent = createContext();
+
+export const AppContent = createContext({
+    backendUrl : "",
+    isLoggedIn : false,
+    setIsLoggedIn : () => {},
+    userData : null,
+    setUserData : () => {},
+    getUserData : () => {}
+});
 
 
 
@@ -19,10 +28,43 @@ export const AppContextProvider = ({children} : Props  ) => {
     const [isLoggedIn, setIsLoggedIn] = useState(false)
     const [userData, setUserData] = useState(null)
 
+    const getAuthState = async() => {
+        try {
+            // axios.defaults.withCredentials = true;
+            const {data} = await userApi.get("/isAuthenticated")
+            console.log(data)
+            if(data.success){
+                setIsLoggedIn(true)
+                getUserData()
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    useEffect(() => {
+        getAuthState()
+    },[])
+
+    const getUserData = async () => {
+        try {
+            // axios.defaults.withCredentials = true;
+            const{data} = await userApi.get("/getCurrentUser")
+            console.log(data)
+            if(data.success){
+                setUserData(data)
+                setIsLoggedIn(true)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     const value = {
         backendUrl,
         isLoggedIn, setIsLoggedIn,
-        userData, setUserData
+        userData, setUserData,
+        getUserData
     }
 
     return (

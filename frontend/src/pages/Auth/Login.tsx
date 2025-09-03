@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function Login(){
     // @ts-ignore
-    const {backendUrl, setIsLoggedIn } = useContext(AppContent)
+    const {backendUrl, setIsLoggedIn, getUserData } = useContext(AppContent)
 
     const navigate = useNavigate()
     const [state, setState] = useState("register")
@@ -31,6 +31,7 @@ export default function Login(){
 
                 if(data.success){
                     setIsLoggedIn(true)
+                    getUserData()
                     navigate("/dashboard")
                 }else{
                     // TODO : Add toast
@@ -45,6 +46,7 @@ export default function Login(){
 
                 if(data.success){
                     setIsLoggedIn(true)
+                    getUserData()
                     navigate("/dashboard")
                 }else{
                     // TODO : Add toast
