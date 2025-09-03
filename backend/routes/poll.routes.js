@@ -16,19 +16,19 @@ import{
 const router = Router()
 
 router.route("/create")
-.post( verifyJWT ,handleCreatePoll)
+.post( verifyJWT ,handleCreatePoll) //done
 
 router.route("/getAllPolls")
-.get(verifyJWT, handleGetAllPolls);
+.get(verifyJWT, handleGetAllPolls); //done
 
 router.route("/votedPolls")
-.get(verifyJWT, handlegetVotedPolls);
+.get(verifyJWT, handlegetVotedPolls); //done
 
 router.route("/:id")
 .get(verifyJWT, handleGetPollById);
 
 router.route("/:id/vote")
-.post(verifyJWT, handleVoteOnPoll);
+.post(verifyJWT, handleVoteOnPoll); // done
 
 router.route("/:id/close")
 .post(verifyJWT, handleClosePolls);
