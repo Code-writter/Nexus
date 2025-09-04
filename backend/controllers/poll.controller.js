@@ -5,66 +5,135 @@ import { ApiError } from '../utils/ApiError.js';
 import { ApiResponse } from '../utils/ApiResponse.js';
 
 
-const handleCreatePoll = asyncHandler( async (req, res) => {
-    const {question, typeOfPoll, options } = req.body;
+// const handleCreatePoll = asyncHandler( async (req, res) => {
+//     const {question, typeOfPoll, options } = req.body;
 
-    // Get user form the cookie
-    const creator = req.user._id
+//     // Get user form the cookie
+//     const creator = req.user._id
 
-    if(
-        [question, typeOfPoll].some((feild) => feild?.trim() === "")
-    ){
-        throw new ApiError(400, "All feilds are required")
+//     if(
+//         [question, typeOfPoll].some((feild) => feild?.trim() === "")
+//     ){
+//         throw new ApiError(400, "All feilds are required")
+//     }
+
+//     let processedOptions = [];
+//     switch(typeOfPoll){
+//         case "single-choice" : 
+//             if(!options || options.length < 2)
+//                 console.log(options)
+//                 throw new ApiError(400, "Single choice polls must have atleast two options")
+
+//             processedOptions = options.map((option) => ({optionText : option}));
+//             break;
+//         case "rating" : 
+//             processedOptions = [1, 2, 3, 4, 5].map((option) => ({
+//                 optionText : option.toString()
+//             }))
+//             break;
+//         case "opinion" :
+//             processedOptions = ["Yes", "No"].map((option) => ({
+//                 optionText : option
+//             }))
+//             break;
+//         case "open-ended" :// In case of open ended
+//             processedOptions = [] 
+//             break;
+//         default :
+//             throw new ApiError(400, "Invalid poll type")
+//     }
+
+//     const poll = await Poll.create({
+//         question,
+//         typeOfPoll,
+//         options : processedOptions,
+//         creator : creator
+//     })
+
+
+//     // Check if poll is created
+//     if(!poll)
+//         throw new ApiError(500, "Something went wrong, Poll cannot be created")
+
+//     return res
+//     .status(200)
+//     .json(
+//         new ApiResponse(
+//             200,
+//             {
+//                 poll : poll
+//             }
+//         )
+//     )
+// })
+
+
+const handleCreatePoll = asyncHandler(async (req, res) => {
+    const { question, typeOfPoll, options } = req.body;
+
+    // Get user from the cookie
+    const creator = req.user._id;
+
+    // (Minor fix: typo "feild" -> "field")
+    if ([question, typeOfPoll].some((field) => field?.trim() === "")) {
+        throw new ApiError(400, "All fields are required");
     }
 
     let processedOptions = [];
-    switch(typeOfPoll){
-        case "single-choice" : 
-            if(!options || options.length < 2)
-                throw new ApiError(400, "Single choice polls must have atleast two options")
+    switch (typeOfPoll) {
+        case "single-choice":
+            // FIX: Added curly braces {} around the 'if' block.
+            // This ensures the 'throw' statement only runs when the condition is true.
+            if (!options || options.length < 2) {
+                console.log("Validation failed: Not enough options provided.", options);
+                throw new ApiError(400, "Single choice polls must have atleast two options");
+            }
 
-            processedOptions = options.map((option) => ({optionText : option}));
+            processedOptions = options.map((option) => ({ optionText: option }));
             break;
-        case "rating" : 
+
+        case "rating":
             processedOptions = [1, 2, 3, 4, 5].map((option) => ({
-                optionText : option.toString()
-            }))
+                optionText: option.toString()
+            }));
             break;
-        case "opinion" :
+
+        case "opinion":
             processedOptions = ["Yes", "No"].map((option) => ({
-                optionText : option
-            }))
+                optionText: option
+            }));
             break;
-        case "open-ended" :// In case of open ended
-            processedOptions = [] 
+
+        case "open-ended": // In case of open ended
+            processedOptions = [];
             break;
-        default :
-            throw new ApiError(400, "Invalid poll type")
+
+        default:
+            throw new ApiError(400, "Invalid poll type");
     }
 
     const poll = await Poll.create({
         question,
         typeOfPoll,
-        options : processedOptions,
-        creator : creator
-    })
-
+        options: processedOptions,
+        creator: creator
+    });
 
     // Check if poll is created
-    if(!poll)
-        throw new ApiError(500, "Something went wrong, Poll cannot be created")
+    if (!poll) {
+        throw new ApiError(500, "Something went wrong, Poll cannot be created");
+    }
 
     return res
-    .status(200)
-    .json(
-        new ApiResponse(
-            200,
-            {
-                poll : poll
-            }
-        )
-    )
-})
+        .status(200)
+        .json(
+            new ApiResponse(
+                200,
+                { poll: poll }
+            )
+        );
+});
+
 
 // Get All polls
 const handleGetAllPolls = asyncHandler( async (req, res) => {

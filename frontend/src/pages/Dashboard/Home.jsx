@@ -1,7 +1,16 @@
+import DashboardLayout from "../../components/layout/DashboardLayout";
+import useUserAuth from "../../hook/useUserAuth";
+
+
+
 export default function Home(){
+    useUserAuth()
     return(
-        <div>
-            Home
-        </div>
+
+        <DashboardLayout activeMenu="Dashboard" >
+            <div>
+                HOme
+            </div>
+        </DashboardLayout>
     )
 }
