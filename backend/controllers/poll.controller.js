@@ -85,10 +85,10 @@ const handleGetAllPolls = asyncHandler( async (req, res) => {
 
     // Get the polls
     const polls = await Poll.find(filter)
-    .populate("creator", "fullName email")
+    .populate("creator", "name email")
     .populate({
         path : "responses.voterId",
-        select : "fullName"
+        select : "name"
     })
     .skip(skip)
     .limit(pageSize)

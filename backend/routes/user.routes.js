@@ -19,7 +19,7 @@ router.route('/login').post(handleLoginUser)
 
 router.route("/information").get(verifyJWT, handleUserInformation)
 
-router.route("/getCurrentUser").get(verifyJWT, getCurrentUser)
+// router.route("/getCurrentUser").get(verifyJWT, getCurrentUser)
 
 router.route('/refresh-token').post(refreshAccessToken)
 
