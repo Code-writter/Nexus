@@ -10,7 +10,8 @@ import toast from "react-hot-toast";
 
 export default function CreatedPolls() {
     useUserAuth()
-    const { user } = useContext(UserContext)
+    
+    const { user, onPollCreateOrDelete } = useContext(UserContext)
 
     const [pollData, setPollData] = useState({
         question: "",
@@ -35,9 +36,7 @@ export default function CreatedPolls() {
         })
     }
 
-    // FIX #1: This function was switching on `pollData.options` (an array)
-    // instead of `pollData.type` (a string). This caused it to always
-    // fall to the `default` case and return an empty array `[]`.
+
     const getOptions = () => { // It is now synchronous (no 'async' needed)
         switch (pollData.type) { // Now correctly switches on the poll type
             case "single-choice":
@@ -62,20 +61,20 @@ export default function CreatedPolls() {
         }
         handleValueChange("error", "")
 
-        const optionData = getOptions(); // No 'await' needed now
+        const optionData = getOptions(); 
 
         try {
-            // FIX #3: Added 'await'. You must wait for the API call to finish
-            // before you can process the response.
+
             const response = await axiosInstance.post(API_PATHS.POLLS.CREATE, {
                 question,
                 typeOfPoll: type,
-                options: optionData, // This will now contain the correct options
+                options: optionData, 
                 creator: user._id
             })
 
             if (response) {
                 toast.success("Poll created successfully !")
+                onPollCreateOrDelete()
                 clearData()
             }
         } catch (error) {
