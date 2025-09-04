@@ -8,7 +8,9 @@ export default function Home(){
     return(
 
         <DashboardLayout activeMenu="Dashboard" >
-
+            <div>
+                HOme
+            </div>
         </DashboardLayout>
     )
 }

@@ -31,7 +31,7 @@ export default function SideMenu({activeMenu}){
             {SIDEBAR_MENU_DATA.map((item, index) => (
                 <button 
                     key={`menu_${index}`}
-                    className={` w-full flex items-center gap-4 text-[15px] ${
+                    className={` cursor-pointer w-full flex items-center gap-4 text-[15px] ${
                         activeMenu === item.label ? " text-white bg-blue-400" : ""
                     } py-4 px-6 rounded-full mb-3 ` }
                     onClick={() => handleClick(item.path)}
