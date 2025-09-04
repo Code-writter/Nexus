@@ -3,6 +3,7 @@ import DashboardLayout from "../../components/layout/DashboardLayout";
 import { UserContext } from "../../context/UserContext";
 import useUserAuth from "../../hook/useUserAuth";
 import { POLL_TYPES } from "../../utils/data";
+import OptionList from "../../components/layout/OptionInput";
 
 export default function CreatedPolls(){
     useUserAuth()
@@ -66,6 +67,23 @@ export default function CreatedPolls(){
                         }
                     </div>
                 </div>
+
+                {
+                    pollData.type === "single-choice" && (
+                        <div className=" mt-5" >
+                            <label className=" text-xs font-medium text-slate-600 " >Single Choice</label>
+
+                            <div className=" mt-3 " >
+                                <OptionList 
+                                    optionList={pollData.options}
+                                    setOptionList={(value) => {
+                                        handleValueChange("options", value)
+                                    }}
+                                />
+                            </div>
+                        </div>
+                    )
+                }
 
             </div>
         </DashboardLayout>
