@@ -5,6 +5,7 @@ import axiosInstance from "../api/axios"
 import { API_PATHS } from "../api/urls";
 
 export default function useUserAuth(){
+    
     const {user, clearUser, updateUser} = useContext(UserContext)
 
     const navigate = useNavigate()

@@ -8,11 +8,12 @@ import UserCard from "../UserCard";
 export default function DashboardLayout({children, activeMenu}){
 
     const {user} = useContext(UserContext)
-
+    console.log(user)
     return(
         <div>
             <Navbar />
-            <div className=" flex " >
+
+            { user && (<div className=" flex " >
                 <div className=" max-[1080px]:hidden " >
                     <SideMenu activeMenu={activeMenu} />
                 </div>
@@ -29,7 +30,9 @@ export default function DashboardLayout({children, activeMenu}){
                         totlaPollsBookmarked={user&&user.totlaPollsBookmarked}
                     />
                 </div>
-            </div>
+            </div>)
+        
+            }
         </div>
     )
 }
