@@ -10,10 +10,11 @@ import CreatedPolls from "./pages/Dashboard/CreatePolls";
 import MyPolls from "./pages/Dashboard/MyPolls";
 import VotedPolls from "./pages/Dashboard/VotedPolls";
 import BookmarkedPolls from "./pages/Dashboard/Bookmarked";
+import UserProvider from "./context/UserContext";
 
 export default function App(){
     return (
-        <div>
+        <UserProvider>
             <Routes>
                 <Route path={"/"} element={<Root />}  />
                 <Route path={"/login"} element={<Login />}  />
@@ -25,7 +26,7 @@ export default function App(){
                 <Route path={"/voted-polls"} element={<VotedPolls />}  />
                 <Route path={"/bookmarked-polls"} element={<BookmarkedPolls />}  />
             </Routes>
-        </div>
+        </UserProvider>
     )
 }   
 

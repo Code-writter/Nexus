@@ -5,3 +5,20 @@
 * {
     font-family: "Outfit", sans-serif;
 }
+
+@layer base{
+    body{
+        background-color: #fff;
+        overflow-x: hidden;
+    }
+}
+
+@layer components{
+    .input-box {
+        @apply  w-full flex justify-center gap-3 text-sm text-black bg-slate-100 px-3 py-3 rounded mt-3 border border-slate-200 outline-none
+    }
+
+    .btn-primary {
+        @apply w-full text-sm font-medium text-white bg-blue-400 shadow-lg p-[10px] rounded-md my-1 mt-6 hover:bg-sky-700
+    }
+}

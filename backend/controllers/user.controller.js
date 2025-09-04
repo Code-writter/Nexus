@@ -2,7 +2,7 @@ import { asyncHandler } from '../utils/AsyncHandler.js'
 import { User } from '../models/user.model.js'
 import { ApiError } from '../utils/ApiError.js'
 import {ApiResponse} from "../utils/ApiResponse.js"
-
+import jwt from 'jsonwebtoken'
 const generateAccessAndRefreshToken = async (userId) => {
     try {
         const user = await User.findById(userId)
@@ -19,13 +19,23 @@ const generateAccessAndRefreshToken = async (userId) => {
     }
 }
 
+const generateAccessToken = (id) => {
+    return jwt.sign(
+        {id},
+        process.env.JWT_SECRET,
+        {
+            expiresIn : "1h"
+        }
+    )
+}
+
 const handleRegisterUser = asyncHandler( async (req, res) => {
     // get uses details from frontend
-    const {fullName, email, password} = req.body;
+    const {name, email, password} = req.body;
 
     // Now validate if they come or not
     if(
-        [fullName, email, password].some((field) => field?.trim() === "" )
+        [name, email, password].some((field) => field?.trim() === "" )
     ){
         throw new ApiError(400, "All fields are required")
     }
@@ -35,15 +45,15 @@ const handleRegisterUser = asyncHandler( async (req, res) => {
     const existingUser = await User.findOne({email})
 
     if(existingUser)
-        throw new ApiError(409, "User with the email already exists")
+        throw new ApiError(400, "User with the email already exists")
 
 
     // create the user 
     const user = await User.create({
         email,
-        fullName,
+        name,
         password,
-        events : [],
+        polls : [],
     })
 
     const createdUser = await User.findById(user._id).select("-password -refreshToken")
@@ -53,9 +63,18 @@ const handleRegisterUser = asyncHandler( async (req, res) => {
 
 
     // User have been saved
-    return res.status(200).json(
-        new ApiResponse(200, createdUser, "User created sucessfully")
-    )
+    return res
+    .status(200)
+    .json({
+        id : createdUser._id,
+        user : {
+            ...createdUser.toObject(),
+            totalPollsCreated : 0,
+            totalPollsVoted : 0,
+            totalPollsBookmarked : 0
+        },
+        token : generateAccessToken(createdUser._id)
+    })
 })
 
 const handleLoginUser = asyncHandler( async (req, res) => {
@@ -85,7 +104,7 @@ const handleLoginUser = asyncHandler( async (req, res) => {
 
     // Modify the access token and refresh token
 
-    const {accessToken, refreshToken} = await generateAccessAndRefreshToken(user._id)
+    // const {accessToken, refreshToken} = await generateAccessAndRefreshToken(user._id)
 
     const loggedInUser = await User.findById(user._id).select("-password -refreshToken")
 
@@ -96,23 +115,34 @@ const handleLoginUser = asyncHandler( async (req, res) => {
 
     // Return the response and the cookies
     return res
+    // .status(200)
+    // .cookie("accessToken", accessToken, cookieOptions)
+    // .cookie("refreshToken", refreshToken, cookieOptions)
+    // .send(
+    //     new ApiResponse(
+    //         200,
+    //         {
+    //             user : loggedInUser, accessToken, refreshToken
+    //         },
+    //         "User logged In successfully"
+    //     )
+    // )
     .status(200)
-    .cookie("accessToken", accessToken, cookieOptions)
-    .cookie("refreshToken", refreshToken, cookieOptions)
-    .send(
-        new ApiResponse(
-            200,
-            {
-                user : loggedInUser, accessToken, refreshToken
-            },
-            "User logged In successfully"
-        )
-    )
+    .json({
+        id : loggedInUser._id,
+        user : {
+            ...loggedInUser.toObject(),
+            totalPollsCreated : 0,
+            totalPollsVoted : 0,
+            totalPollsBookmarked : 0
+        },
+        token : generateAccessToken(loggedInUser._id)
+    })
 })
 
 
 const handleUserInformation = asyncHandler( async (req, res) => {
-    const id = req.user._id;
+    const id = req.user.id;
 
     if(!id){
         throw new ApiError(404, "UnAuthorized")
@@ -131,15 +161,16 @@ const handleUserInformation = asyncHandler( async (req, res) => {
     
     return res
     .status(200)
-    .json(
-        new ApiResponse(
-            200,
-            {
-                user : details
-            },
-            "User details"
-        )
-    )
+    .json({
+        id : details._id,
+        user : {
+            ...details.toObject(),
+            totalPollsCreated : 0,
+            totalPollsVoted : 0,
+            totalPollsBookmarked : 0
+        },
+    })
+
 })
 
 
