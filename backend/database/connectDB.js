@@ -12,7 +12,7 @@ export default async function connectDB(){
     try {
         
         const databaseUrl = process.env.MONGO_URI
-        const connectionInstance = await mongoose.connect(`${databaseUrl}${DB_NAME}`)
+        const connectionInstance = await mongoose.connect(databaseUrl/DB_NAME)
 
         console.log(`Database connected ${connectionInstance.connection.host}`)
     } catch (error) {
