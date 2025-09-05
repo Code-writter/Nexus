@@ -19,7 +19,7 @@ export default function UserCard(
 ){
 
     return(
-        <div className=" p-4 bg-slate-100/50 rounded-lg  mt-16  overflow-hidden "  >
+        <div className=" p-4 bg-slate-100/50 rounded-lg sticky z-20 mt-16  overflow-hidden "  >
             <div className=" w-full h-32 bg-blue-400 flex items-center justify-center relative" >
                 <div className=" flex items-center justify-center absolute bg-amber-200 text-center h-20 w-20 rounded-full overflow-hidden " >
                     {name}
