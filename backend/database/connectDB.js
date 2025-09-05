@@ -3,9 +3,6 @@ import mongoose from "mongoose";
 import { ApiError } from "../utils/ApiError.js"
 // import {DB_NAME} from '../constants.js'
 
-import dotenv from 'dotenv'
-
-dotenv.config();
 
 export default async function connectDB(){
     try {

@@ -1,12 +1,15 @@
 
 import dotenv from 'dotenv'
-dotenv.config()
+
 
 import app from './app.js'
 import connectDB from './database/connectDB.js'
 import { ApiError } from './utils/ApiError.js'
 
 
+if (process.env.NODE_ENV !== 'production') {
+    dotenv.config();
+}
 
 const PORT = process.env.PORT || 8000
 
