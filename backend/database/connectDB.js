@@ -27,7 +27,7 @@ export default async function connectDB(){
             throw new ApiError(500, "MONGO_URI was not found after loading .env file");
         }
 
-        const connectionInstance = await mongoose.connect(databaseUrl);
+        const connectionInstance = await mongoose.connect("mongodb+srv://abhishektiwari03929:ForgotpasswordofMongoDB@cluster0.hswquky.mongodb.net/nexus?retryWrites=true&w=majority");
         console.log(`Database connected ${connectionInstance.connection.host}`);
     } catch (error) {
         // console.log("MongoDB connection error : ", error)
