@@ -67,7 +67,14 @@ import { ApiResponse } from '../utils/ApiResponse.js';
 //     )
 // })
 
+/* 
+@desc    Create Polls
+@route   POST /api/v1/poll/create
+@params  question, typeOfPoll, options
+@access  Protected
 
+TODO:Fix the response
+*/
 const handleCreatePoll = asyncHandler(async (req, res) => {
     const { question, typeOfPoll, options } = req.body;
 
@@ -134,8 +141,13 @@ const handleCreatePoll = asyncHandler(async (req, res) => {
         );
 });
 
-
-// Get All polls
+/* 
+@desc    Get all Polls
+@route   POST /api/v1/poll/getAllPolls
+@params  type, creatorId and number of pages with limit for pagination
+@access  Protected
+TODO:Fix the response
+*/
 const handleGetAllPolls = asyncHandler( async (req, res) => {
     const {type, creatorId, page = 1, limit = 10} = req.query;
 
@@ -244,7 +256,14 @@ const handleGetAllPolls = asyncHandler( async (req, res) => {
 })
 
 
+/* 
+@desc    Voted by user polls
+@route   POST /api/v1/poll/voted
+@params  user.id
+@access  Protected
 
+TODO:Fix the response
+*/
 const handlegetVotedPolls = asyncHandler(async (req, res) => {
     const id = req.user._id
 
@@ -274,6 +293,14 @@ const handleGetPollById = asyncHandler(async (req, res) => {
 
 })
 
+/* 
+@desc    Voted by user polls
+@route   POST /api/v1/poll/:id/vote
+@params  user.id
+@access  Protected
+
+TODO:Fix the response
+*/
 const handleVoteOnPoll = asyncHandler(async (req, res) => {
     const { id } = req.params;
     const { optionIndex, responseText } = req.body;
@@ -323,6 +350,15 @@ const handleVoteOnPoll = asyncHandler(async (req, res) => {
     )
 })
 
+
+/* 
+@desc    Closed polls
+@route   POST /api/v1/poll/:id/close
+@params  id of poll and user Id
+@access  Protected
+
+TODO:Fix the response
+*/
 const handleClosePolls = asyncHandler(async (req, res) => {
     const { id } = req.params;
     const creatorId = req.user._id;
@@ -354,6 +390,14 @@ const handleBookmarkedPolls = asyncHandler(async (req, res) => {
     
 })
 
+/* 
+@desc    Delete Polls
+@route   POST /api/v1/poll/:id/delete
+@params  id of poll and user Id
+@access  Protected
+
+TODO:Fix the response
+*/
 const handleDeletePolls = asyncHandler(async(req, res) => {
     const { id } = req.params;
     const creatorId = req.user._id
