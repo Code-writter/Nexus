@@ -1,12 +1,22 @@
 import mongoose from "mongoose";
-import {config} from 'dotenv'
+
 import { ApiError } from "../utils/ApiError.js"
-import {DB_NAME} from '../constants.js'
+// import {DB_NAME} from '../constants.js'
+
+import dotenv from 'dotenv'
+
+const dotenvResult = dotenv.config();
 
 
-// .env config
-config()
+if (dotenvResult.error) {
+    console.error("FATAL: Error loading .env file:", dotenvResult.error);
+    throw new Error("Could not find or load .env file. Please check its location and permissions.");
+}
 
+
+console.log("--- Variables loaded from .env file ---");
+console.log(dotenvResult.parsed);
+console.log("---------------------------------------");
 
 export default async function connectDB(){
     try {
@@ -14,12 +24,11 @@ export default async function connectDB(){
         const databaseUrl = process.env.MONGO_URI;
 
         if (!databaseUrl) {
-            throw new ApiError(500, "MONGO_URI not found in .env file");
+            throw new ApiError(500, "MONGO_URI was not found after loading .env file");
         }
-        console.log(databaseUrl)
-        const connectionInstance = await mongoose.connect(databaseUrl)
 
-        console.log(`Database connected ${connectionInstance.connection.host}`)
+        const connectionInstance = await mongoose.connect(databaseUrl);
+        console.log(`Database connected ${connectionInstance.connection.host}`);
     } catch (error) {
         // console.log("MongoDB connection error : ", error)
         // // we can also use throw error
