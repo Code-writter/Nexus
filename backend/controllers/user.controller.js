@@ -54,7 +54,7 @@ const handleRegisterUser = asyncHandler( async (req, res) => {
     })
 
     const createdUser = await User.findById(user._id).select("-password")
-
+    console.log("Crateed suer in conrotller ", createdUser)
     if(!createdUser)
         throw new ApiError(500, `Something went wrong while registering the user`)
 
