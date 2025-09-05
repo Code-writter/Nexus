@@ -3,22 +3,13 @@ import { User } from '../models/user.model.js'
 import { ApiError } from '../utils/ApiError.js'
 import {ApiResponse} from "../utils/ApiResponse.js"
 import jwt from 'jsonwebtoken'
-const generateAccessAndRefreshToken = async (userId) => {
-    try {
-        const user = await User.findById(userId)
-        const accessToken = user.generateAccessToken()
-        const refreshToken = user.generateRefreshToken()
 
-        user.refreshToken = refreshToken
-        await user.save({ validateBeforeSave: false })
-
-        return {accessToken, refreshToken}
-
-    } catch (error) {
-        throw new ApiError(500, `Something went wrong while generating refresh and access token ${error}`)
-    }
-}
-
+/* 
+@desc    Generate jwt token
+@route   POST /api/v1/user/register
+@params  userId
+@access  Helper
+*/
 const generateAccessToken = (id) => {
     return jwt.sign(
         {id},
@@ -29,6 +20,12 @@ const generateAccessToken = (id) => {
     )
 }
 
+/* 
+@desc    Register User & get token
+@route   POST /api/v1/user/register
+@params  name, email, password
+@access  Public
+*/
 const handleRegisterUser = asyncHandler( async (req, res) => {
     // get uses details from frontend
     const {name, email, password} = req.body;
@@ -41,7 +38,7 @@ const handleRegisterUser = asyncHandler( async (req, res) => {
     }
 
     // check for the existing user in the database
-
+    console.log("Existing user details")
     const existingUser = await User.findOne({email})
 
     if(existingUser)
@@ -56,7 +53,7 @@ const handleRegisterUser = asyncHandler( async (req, res) => {
         polls : [],
     })
 
-    const createdUser = await User.findById(user._id).select("-password -refreshToken")
+    const createdUser = await User.findById(user._id).select("-password")
 
     if(!createdUser)
         throw new ApiError(500, `Something went wrong while registering the user`)
@@ -77,6 +74,13 @@ const handleRegisterUser = asyncHandler( async (req, res) => {
     })
 })
 
+
+/* 
+@desc    Login User & get token
+@route   POST /api/v1/user/register
+@params  email, password
+@access  Public
+*/
 const handleLoginUser = asyncHandler( async (req, res) => {
     // get data
     const {email, password} = req.body;
@@ -141,6 +145,12 @@ const handleLoginUser = asyncHandler( async (req, res) => {
 })
 
 
+/* 
+@desc    Register User & get token
+@route   POST /api/v1/user/information
+@params  usre.id from the decoted jwt token 
+@access  Protected
+*/
 const handleUserInformation = asyncHandler( async (req, res) => {
     const id = req.user.id;
 
@@ -154,7 +164,7 @@ const handleUserInformation = asyncHandler( async (req, res) => {
     if(!getUser)
         throw new ApiError(404, "User not found ")
 
-    const details = await User.findById(getUser._id).select("-password -refreshToken")
+    const details = await User.findById(getUser._id).select("-password")
 
     if(!details)
         throw new ApiError(500, "Something went wrong while feating the details")

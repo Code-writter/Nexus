@@ -1,5 +1,7 @@
 
-export const BASE_URL = "http://localhost:3000/api/v1"
+// export const BASE_URL = "http://localhost:3000/api/v1"
+export const BASE_URL = "https://nexus-theta-eight.vercel.app/api/v1"
+
 
 export const API_PATHS = {
     AUTH :{
