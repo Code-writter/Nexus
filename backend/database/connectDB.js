@@ -5,18 +5,7 @@ import { ApiError } from "../utils/ApiError.js"
 
 import dotenv from 'dotenv'
 
-const dotenvResult = dotenv.config();
-
-
-if (dotenvResult.error) {
-    console.error("FATAL: Error loading .env file:", dotenvResult.error);
-    throw new Error("Could not find or load .env file. Please check its location and permissions.");
-}
-
-
-console.log("--- Variables loaded from .env file ---");
-console.log(dotenvResult.parsed);
-console.log("---------------------------------------");
+dotenv.config();
 
 export default async function connectDB(){
     try {
@@ -27,8 +16,9 @@ export default async function connectDB(){
             throw new ApiError(500, "MONGO_URI was not found after loading .env file");
         }
 
-        const connectionInstance = await mongoose.connect("mongodb+srv://abhishektiwari03929:ForgotpasswordofMongoDB@cluster0.hswquky.mongodb.net/nexus?retryWrites=true&w=majority");
+        const connectionInstance = await mongoose.connect(databaseUrl);
         console.log(`Database connected ${connectionInstance.connection.host}`);
+
     } catch (error) {
         // console.log("MongoDB connection error : ", error)
         // // we can also use throw error

@@ -39,6 +39,7 @@ const handleRegisterUser = asyncHandler( async (req, res) => {
 
     // check for the existing user in the database
     console.log("Existing user details")
+    
     const existingUser = await User.findOne({email})
 
     if(existingUser)
