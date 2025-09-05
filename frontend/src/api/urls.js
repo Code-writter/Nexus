@@ -11,7 +11,7 @@ export const API_PATHS = {
     },
     POLLS : {
         CREATE : "/poll/create",
-        // GET_ALL : "/poll/getAllPolls",
+        GET_ALL : "/poll/getAllPolls",
         // GET_BY_ID : `/poll/${pollId}`,
         // VOTE : `/poll/${pollId}/vote`,
         // CLOSE : `/poll/${pollId}/close`,

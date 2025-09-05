@@ -151,7 +151,7 @@ TODO:Fix the response
 const handleGetAllPolls = asyncHandler( async (req, res) => {
     const {type, creatorId, page = 1, limit = 10} = req.query;
 
-    const userId = req.user._id;
+    const userId = req.user.id;
 
     const filter = {};
 
@@ -239,19 +239,17 @@ const handleGetAllPolls = asyncHandler( async (req, res) => {
         }
     }).sort((a, b) => b.count - a.count)
 
-    return res
+    res
     .status(200)
     .json(
-        new ApiResponse(
-            200,
-            {
-                polls : updatedPolls,
-                currentPage : pageNumber,
-                totalPages : Math.ceil(totalPolls / pageSize),
-                totalPolls,
-                stats : statsWithDefault
-            }
-        )
+
+        {
+            polls : updatedPolls,
+            currentPage : pageNumber,
+            totalPages : Math.ceil(totalPolls / pageSize),
+            totalPolls,
+            stats : statsWithDefault
+        }
     )
 })
 
