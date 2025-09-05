@@ -27,9 +27,9 @@ export const SIDEBAR_MENU_DATA=[
     },
     {
         id : 5,
-        label : "Bookmarks", 
+        label : "Bookmarked", 
         icon : LuBookMarked,
-        path : "/bookmarked"
+        path : "/bookmarked-polls"
     },
     {
         id : 6,
