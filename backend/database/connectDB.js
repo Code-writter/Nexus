@@ -11,7 +11,11 @@ config()
 export default async function connectDB(){
     try {
         
-        const databaseUrl = process.env.MONGO_URI
+        const databaseUrl = `${process.env.MONGO_URI}/${DB_NAME}`;
+
+        if (!databaseUrl) {
+            throw new ApiError(500, "MONGO_URI not found in .env file");
+        }
         console.log(databaseUrl)
         const connectionInstance = await mongoose.connect(databaseUrl)
 
