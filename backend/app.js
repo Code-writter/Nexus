@@ -6,7 +6,8 @@ const app = express();
 
 const allowedOrigings = [
     "http://localhost:3000",
-    "http://localhost:5173"
+    "http://localhost:5173",
+    "https://nexus-zeta-ruby.vercel.app"
 ]
 
 app.use(cors({
